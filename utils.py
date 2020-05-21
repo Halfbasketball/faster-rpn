@@ -7,17 +7,24 @@ from xml.etree.ElementTree import parse
 
 
 def readXML(path):
-    domTree = parse(path)
-    # 文档根元素
-    rootNode = domTree.getroot()
-    ob=rootNode.find('object')
+    domTree=None
+    try:
+        domTree = parse(path)
+    except:
+        pass
     boxes=[]
-    for i in range(len(ob)):
-        box=ob[i].find('bndbox')
-        boxes.append([box.find('xmin').text,
-                      box.find('ymin').text,
-                      box.find('xmax').text,
-                      box.find('ymax').text])
+    if domTree:
+
+        # 文档根元素
+        rootNode = domTree.getroot()
+        ob=rootNode.findall('object')
+        boxes=[]
+        for bb in ob:
+            box=bb.find('bndbox')
+            boxes.append([box.find('xmin').text,
+                          box.find('ymin').text,
+                          box.find('xmax').text,
+                          box.find('ymax').text])
     return boxes
 
 
